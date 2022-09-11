@@ -1,5 +1,6 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_typing_uninitialized_variables, use_key_in_widget_constructors, sized_box_for_whitespace
+// ignore_for_file: avoid_unnecessary_containers, prefer_typing_uninitialized_variables, use_key_in_widget_constructors, sized_box_for_whitespace, use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,11 +20,31 @@ class _HomePageState extends State<HomePage> {
     {"note": " lala lala la lala lala lala la lala ", "image": "logo.png"},
     {"note": " lala lala la lala lala lala la lala ", "image": "logo.png"}
   ];
+  getuser() {
+    var user = FirebaseAuth.instance.currentUser;
+    // ignore: avoid_print
+    print(user!.email);
+  }
+
+  @override
+  void initState() {
+    getuser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacementNamed("login");
+              },
+              icon: const Icon(Icons.exit_to_app))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
